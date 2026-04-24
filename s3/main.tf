@@ -52,7 +52,7 @@ resource "yandex_storage_bucket" "demo_bucket" {
   }
 
   versioning {
-    enabled = true
+    enabled = var.bucket_versioning
   }
 
   server_side_encryption_configuration {

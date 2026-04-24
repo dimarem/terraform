@@ -50,3 +50,9 @@ variable "bucket_storage_cls" {
     error_message = "Недопустимое значение зоны"
   }
 }
+
+variable "bucket_versioning" {
+  type        = bool
+  default     = true
+  description = "Версионирование объектов в бакете"
+}

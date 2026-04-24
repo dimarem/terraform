@@ -15,6 +15,7 @@ kms_name           = "demo-bucket-kms"
 bucket_name        = "demo-bucket"
 bucket_max_size    = 1073741824 # 1Гб
 bucket_storage_cls = "STANDARD"
+bucket_versioning  = true
 ```
 
 cloud_id и folder_id указать свои.
