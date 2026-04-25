@@ -4,11 +4,13 @@
 
 ## Создать ресурсы
 
+❗Требуется версия terraform 1.11+.
+
 1. В текущей директории создать файл `terraform.tfvars` со следующим содержанием:
 
 ```
 cloud_id           = "<your_cloud_id>"
-folder_id          = "your_folder_id"
+folder_id          = "<your_folder_id>"
 zone               = "ru-central1-a"
 sa_name            = "demo-bucket-sa"
 kms_name           = "demo-bucket-kms"
@@ -84,8 +86,6 @@ terraform {
 export AWS_ACCESS_KEY_ID="<ACCESS_KEY>"
 export AWS_SECRET_ACCESS_KEY="<SECRET_KEY>"
 ```
-
-❗Требуется версия terraform 1.11+.
 
 ## Удалить ресурсы
 
