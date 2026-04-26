@@ -31,8 +31,7 @@ compute_instance = {
   platform_id = "standard-v3"
   cores       = 2
   memory      = 2
-  ssh_keys    = "ubuntu:${file("~/.ssh/<your_ssh>.pub")}"
-  user_data   = "#cloud-config\ntimezone: 'Europe/Moscow'\nruncmd:\n  - curl -L 'https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh' | bash\n  - apt-get -y install gitlab-runner"
+  ssh_key     = "<your_ssh_pub_key>"
 }
 gitlab = {
   name                      = "demo-gitlab-instance"
@@ -47,7 +46,7 @@ gitlab = {
 
 ```
 
-cloud_id, folder_id, ssh_keys, admin_login, admin_email и domain указать свои.
+cloud_id, folder_id, ssh_key, admin_login, admin_email и domain указать свои.
 
 2. Инициализировать рабочую директорию:
 

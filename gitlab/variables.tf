@@ -53,8 +53,7 @@ variable "compute_instance" {
     platform_id = string
     cores       = number
     memory      = number
-    ssh_keys    = string
-    user_data   = string
+    ssh_key     = string
   })
   description = "Настройки ВМ, на которой будет запущен Gitlab Runner"
 }

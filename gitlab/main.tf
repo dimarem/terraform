@@ -84,8 +84,8 @@ resource "yandex_compute_instance" "gitlab" {
   }
 
   metadata = {
-    ssh-keys  = var.compute_instance["ssh_keys"]
-    user-data = var.compute_instance["user_data"]
+    ssh-keys  = "ubuntu:${var.compute_instance["ssh_key"]}"
+    user-data = "#cloud-config\ntimezone: 'Europe/Moscow'\nruncmd:\n  - curl -L 'https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh' | bash\n  - apt-get -y install gitlab-runner"
   }
 }
 
