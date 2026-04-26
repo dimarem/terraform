@@ -21,6 +21,7 @@ yc iam service-account list
 8. Создать переменные окружения:
 
 ```bash
+yc iam service-account list
 export YC_TOKEN=$(yc iam create-token --impersonate-service-account-id <идентификатор_сервисного_аккаунта>)
 export YC_CLOUD_ID=$(yc config get cloud-id)
 export YC_FOLDER_ID=$(yc config get folder-id)
