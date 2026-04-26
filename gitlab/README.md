@@ -249,6 +249,8 @@ terraform {
 
 ```yml
 stages:
+  - lint
+  - init
   - validate
   - plan
   - apply
@@ -283,8 +285,29 @@ before_script:
       }
     }
     EOF
-  - terraform --version
-  - terraform init
+
+lint:checkov:
+  stage: lint
+  image:
+    name: bridgecrew/checkov
+    entrypoint: [""]
+  before_script: []
+  script:
+    - checkov -d .
+
+lint:tflint:
+  stage: lint
+  image:
+    name: ghcr.io/terraform-linters/tflint
+    entrypoint: [""]
+  before_script: []
+  script:
+    - tflint 
+
+init:
+  stage: init
+  script:
+    - terraform init
 
 validate:
   stage: validate
@@ -321,4 +344,9 @@ apply:
 └── versions.tf
 ```
 
-5. Запустить пайплайн в Gitlab.
+5. Перейти в `Build -> Pipelines` и запустить пайплайн в Gitlab.
+
+## Документация
+
+- [tflint](https://github.com/terraform-linters/tflint)
+- [checkov](https://www.checkov.io/)
