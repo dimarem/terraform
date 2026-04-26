@@ -61,6 +61,7 @@ variable "compute_instance" {
 variable "gitlab" {
   type = object({
     name                      = string
+    description               = string
     domain                    = string
     admin_login               = string
     admin_email               = string

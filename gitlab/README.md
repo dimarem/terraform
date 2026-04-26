@@ -35,6 +35,7 @@ compute_instance = {
 }
 gitlab = {
   name                      = "demo-gitlab-instance"
+  description               = "Демонстрационный экземпляр Gitlab"
   domain                    = "<your_subdomain>.gitlab.yandexcloud.net"
   admin_login               = "<your_login>"
   admin_email               = "<your_email>"

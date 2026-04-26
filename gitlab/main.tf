@@ -92,6 +92,7 @@ resource "yandex_compute_instance" "gitlab" {
 # Создание экземпляра Gitlab
 resource "yandex_gitlab_instance" "demo" {
   name                      = var.gitlab["name"]
+  description               = var.gitlab["description"]
   resource_preset_id        = var.gitlab["resource_preset_id"]
   disk_size                 = var.gitlab["disk_size"]
   admin_login               = var.gitlab["admin_login"]
