@@ -320,3 +320,5 @@ apply:
 ├── variables.tf
 └── versions.tf
 ```
+
+5. Запустить пайплайн в Gitlab.
