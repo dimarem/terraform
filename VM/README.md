@@ -15,16 +15,17 @@ cloud_id  = "<your_cloud_id>"
 folder_id = "<your_folder_id>"
 zone      = "ru-central1-a"
 vpc = {
-  name = demo-ci-vpc
+  name = "demo-ci-vpc"
 }
 vpc_subnet = {
-  name           = demo-ci-vpc-subnet
+  name           = "demo-ci-vpc-subnet"
   v4_cidr_blocks = ["10.5.0.0/24"]
 }
 cd = {
   name = "demo-cd"
   type = "network-ssd"
   size = 15
+  nat = true
 }
 ci = {
   name        = "demo-ci"

@@ -1,16 +1,24 @@
+locals {
+  suffix          = random_string.suffix.result
+  vpc_name        = "${var.vpc["name"]}-${local.suffix}"
+  vpc_subnet_name = "${var.vpc_subnet["name"]}-${local.suffix}"
+  cd_name         = "${var.cd["name"]}-${local.suffix}"
+  vm_name         = "${var.ci["name"]}-${local.suffix}"
+}
+
 # Создание VPC для ВМ
 resource "yandex_vpc_network" "vm" {
-  name        = var.vpc["name"]
-  description = "Сеть для ВМ ${var.ci["name"]}"
+  name        = local.vpc_name
+  description = "Сеть для ВМ ${local.vm_name}"
 }
 
 # Создание подсети для ВМ
 resource "yandex_vpc_subnet" "vm" {
-  name           = var.vpc_subnet["name"]
+  name           = local.vpc_subnet_name
   zone           = var.zone
   network_id     = yandex_vpc_network.vm.id
   v4_cidr_blocks = var.vpc_subnet["v4_cidr_blocks"]
-  description    = "Подсеть для ВМ ${var.ci["name"]}"
+  description    = "Подсеть для ВМ ${local.vm_name}"
 }
 
 # Получение актуального image_id
@@ -20,17 +28,17 @@ data "yandex_compute_image" "vm" {
 
 # Создание загрузочного диска
 resource "yandex_compute_disk" "vm" {
-  name        = var.cd["name"]
+  name        = local.cd_name
   type        = var.cd["type"]
   size        = var.cd["size"]
   zone        = var.zone
-  image_id    = yandex_compute_image.vm.id
+  image_id    = data.yandex_compute_image.vm.id
   description = "Загрузочный диск для ВМ ${var.ci["name"]}"
 }
 
 # Создание ВМ
 resource "yandex_compute_instance" "demo" {
-  name        = var.ci["name"]
+  name        = local.vm_name
   platform_id = var.ci["platform_id"]
   zone        = var.zone
   description = "Демонстрационный пример ВМ"
@@ -46,6 +54,12 @@ resource "yandex_compute_instance" "demo" {
 
   network_interface {
     subnet_id = yandex_vpc_subnet.vm.id
-    nat       = var.ci["nat"]
+    nat       = var.cd["nat"]
   }
+}
+
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+  upper   = false
 }

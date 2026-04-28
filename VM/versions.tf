@@ -16,7 +16,7 @@ terraform {
       s3 = "https://storage.yandexcloud.net"
     }
 
-    bucket       = "demo-bucket-tv0pq7ct"
+    bucket       = "demo-bucket-jdu7z2q2"
     region       = "ru-central1"
     key          = "terraform.tfstate"
     use_lockfile = true
