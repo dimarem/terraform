@@ -34,16 +34,16 @@ terraform init
 terraform validate
 ```
 
-4. Вывести план (опционально):
+4. Создать план:
 
 ```bash
-terraform plan
+terraform plan -out=.tfplan
 ```
 
 5. Применить манифесты:
 
 ```bash
-terraform apply
+terraform apply .tfplan
 ```
 
 ℹ️ После создания ресурсов будет создан файл `.keys.txt`, содержащий `ACCESS_KEY` и `SECRET_KEY`, а также отображены значения переменных `bucket_name` и `service_account_id` для доступа к бакету.
@@ -101,3 +101,4 @@ terraform destroy
 - [Шифрование бакета](https://yandex.cloud/ru/docs/storage/operations/buckets/encrypt)
 - [yandex_storage_bucket](https://yandex.cloud/ru/docs/terraform/resources/storage_bucket)
 - [yandex_kms_symmetric_key](https://yandex.cloud/ru/docs/terraform/resources/kms_symmetric_key)
+- [random](https://registry.terraform.io/providers/hashicorp/random/latest/docs)

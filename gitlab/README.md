@@ -61,16 +61,16 @@ terraform init
 terraform validate
 ```
 
-4. Вывести план (опционально):
+4. Создать план:
 
 ```bash
-terraform plan
+terraform plan -out=.tfplan
 ```
 
 5. Применить манифесты:
 
 ```bash
-terraform apply
+terraform apply .tfplan
 ```
 
 6. После создания экземпляра Gitlab подтвердить почту и создать пароль.
@@ -84,6 +84,10 @@ terraform destroy
 ## Документация
 
 - [yandex_gitlab_instance](https://yandex.cloud/ru/docs/terraform/resources/gitlab_instance)
+- [yandex_compute_disk](https://yandex.cloud/ru/docs/terraform/resources/compute_disk)
+- [yandex_vpc_network](https://yandex.cloud/ru/docs/terraform/resources/vpc_network)
+- [yandex_vpc_subnet](https://yandex.cloud/ru/docs/terraform/resources/vpc_subnet)
+- [random](https://registry.terraform.io/providers/hashicorp/random/latest/docs)
 
 ---
 

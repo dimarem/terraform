@@ -60,7 +60,7 @@ terraform init
 terraform validate
 ```
 
-4. Вывести план (опционально):
+4. Создать план:
 
 ```bash
 terraform plan -out=.tfplan
