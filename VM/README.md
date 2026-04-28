@@ -80,4 +80,5 @@ terraform destroy
 - [yandex_vpc_network](https://yandex.cloud/ru/docs/terraform/resources/vpc_network)
 - [yandex_vpc_subnet](https://yandex.cloud/ru/docs/terraform/resources/vpc_subnet)
 - [yandex_compute_image](https://yandex.cloud/ru/docs/terraform/data-sources/compute_image)
+- [random](https://registry.terraform.io/providers/hashicorp/random/latest/docs)
 - [Получить список публичных образов](https://yandex.cloud/ru/docs/compute/operations/images-with-pre-installed-software/get-list)
