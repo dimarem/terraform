@@ -56,6 +56,13 @@ resource "yandex_compute_instance" "demo" {
     subnet_id = yandex_vpc_subnet.vm.id
     nat       = var.cd["nat"]
   }
+
+  metadata = {
+    user-data = templatefile("${path.module}/cloud-init.tftpl", {
+      admin_name  = var.cloud_init["admin_name"]
+      ssh_pub_key = var.cloud_init["ssh_pub_key"]
+    })
+  }
 }
 
 resource "random_string" "suffix" {

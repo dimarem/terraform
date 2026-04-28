@@ -53,3 +53,11 @@ variable "ci" {
   })
   description = "Настройки виртуальной машины"
 }
+
+variable "cloud_init" {
+  type = object({
+    admin_name  = string
+    ssh_pub_key = string
+  })
+  description = "Значения переменных для cloud-init"
+}

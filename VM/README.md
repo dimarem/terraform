@@ -34,9 +34,13 @@ ci = {
   memory      = 4
   nat         = true
 }
+cloud_init = {
+  admin_name  = "<your_admin_name>"
+  ssh_pub_key = "<your_ssh_public_key>"
+}
 ```
 
-cloud_id и folder_id указать свои.
+cloud_id, folder_id и cloud_init указать свои.
 
 2. Инициализировать рабочую директорию:
 
