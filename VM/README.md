@@ -57,13 +57,21 @@ terraform validate
 4. Вывести план (опционально):
 
 ```bash
-terraform plan
+terraform plan -out=.tfplan
 ```
 
 5. Применить манифесты:
 
 ```bash
-terraform apply
+terraform apply .tfplan
+```
+
+## Подключение по ssh
+
+```bash
+ssh <your_admin_name>@<vm_public_ip>
+# или
+ssh -i ~/.ssh/<your_ssh_public_key> <your_admin_name>@<vm_public_ip>
 ```
 
 ## Получить список образов
