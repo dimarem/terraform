@@ -30,8 +30,8 @@ cd = {
 ci = {
   name        = "demo-ci"
   platform_id = "standard-v3"
-  cores       = 2
-  memory      = 4
+  cores       = 4
+  memory      = 8
   nat         = true
 }
 cloud_init = {
