@@ -1,6 +1,10 @@
 # Виртуальная машина (VM)
 
-Пример создания виртуальной машины.
+Пример создания виртуальной машины, в которой:
+
+- настраивается доступ администратора
+- устанавливается nginx и postgres
+- создается пользователь для postgres
 
 ## Создать ресурсы
 
@@ -35,10 +39,10 @@ ci = {
   nat         = true
 }
 cloud_init = {
-  admin_name  = "<your_admin_name>"
-  ssh_pub_key = "<your_ssh_public_key>"
-  db_user     = "<your_db_user>"
-  db_pass     = "<your_db_pass>"
+  admin_name  = "<your_admin_name>"     # имя администратора
+  ssh_pub_key = "<your_ssh_public_key>" # публичный ключ администратора
+  db_user     = "<your_db_user>"        # пользователь в Postgres
+  db_pass     = "<your_db_pass>"        # пароль пользователя в Postgres
 }
 ```
 
@@ -68,13 +72,24 @@ terraform plan -out=.tfplan
 terraform apply .tfplan
 ```
 
-## Подключение по ssh
+## Проверить работу
+
+1. Подключиться по ssh:
 
 ```bash
 ssh <your_admin_name>@<vm_public_ip>
 # или
 ssh -i ~/.ssh/<your_ssh_public_key> <your_admin_name>@<vm_public_ip>
 ```
+
+2. Создать базу данных в Postgres:
+
+```bash
+createdb -O <your_admin_name> app
+psql -U <your_admin_name> -d app
+```
+
+3. Перейти в браузер по адресу "http://<vm_public_ip>" и проверить отображается ли приветственная страница.
 
 ## Получить список образов
 
