@@ -37,6 +37,8 @@ ci = {
 cloud_init = {
   admin_name  = "<your_admin_name>"
   ssh_pub_key = "<your_ssh_public_key>"
+  db_user     = "<your_db_user>"
+  db_pass     = "<your_db_pass>"
 }
 ```
 

@@ -61,6 +61,8 @@ resource "yandex_compute_instance" "demo" {
     user-data = templatefile("${path.module}/cloud-init.tftpl", {
       admin_name  = var.cloud_init["admin_name"]
       ssh_pub_key = var.cloud_init["ssh_pub_key"]
+      db_user     = var.cloud_init["db_user"]
+      db_pass     = var.cloud_init["db_pass"]
     })
   }
 }
