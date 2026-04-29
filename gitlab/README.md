@@ -44,7 +44,6 @@ gitlab = {
   disk_size                 = 30
   backup_retain_period_days = 7
 }
-
 ```
 
 cloud_id, folder_id, ssh_key, admin_login, admin_email и domain указать свои.
