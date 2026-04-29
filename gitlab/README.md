@@ -24,13 +24,13 @@ vpc_subnet = {
 }
 compute_disk = {
   name = "demo-gitlab-runner-disk"
-  size = 15
+  size = 30
 }
 compute_instance = {
   name        = "demo-gitlab-runner"
   platform_id = "standard-v3"
   cores       = 2
-  memory      = 2
+  memory      = 4
   ssh_key     = "<your_ssh_pub_key>"
 }
 gitlab = {
