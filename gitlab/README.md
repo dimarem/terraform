@@ -11,10 +11,11 @@
 1. В текущей директории создать файл `terraform.tfvars` со следующим содержанием:
 
 ```
-cloud_id  = "<your_cloud_id>"
-folder_id = "<your_folder_id>"
-zone      = "ru-central1-a"
-sa_name   = "demo-gitlab-sa"
+cloud_id     = "<your_cloud_id>"
+folder_id    = "<your_folder_id>"
+zone         = "ru-central1-a"
+sa_name      = "demo-gitlab-sa"
+kms_key_name = "gitlab-kms"
 vpc = {
   name = "demo-gitlab-vpc"
 }
@@ -43,6 +44,12 @@ gitlab = {
   approval_rules_id         = "BASIC"
   disk_size                 = 30
   backup_retain_period_days = 7
+}
+registry = {
+  name = "demo-registry"
+}
+lockbox = {
+  name = "demo-lockbox"
 }
 ```
 
@@ -86,6 +93,11 @@ terraform destroy
 - [yandex_compute_disk](https://yandex.cloud/ru/docs/terraform/resources/compute_disk)
 - [yandex_vpc_network](https://yandex.cloud/ru/docs/terraform/resources/vpc_network)
 - [yandex_vpc_subnet](https://yandex.cloud/ru/docs/terraform/resources/vpc_subnet)
+- [yandex_container_registry](https://yandex.cloud/ru/docs/terraform/resources/container_registry)
+- [yandex_container_registry_iam_binding](https://yandex.cloud/ru/docs/terraform/resources/container_registry_iam_binding)
+- [yandex_lockbox_secret](https://yandex.cloud/ru/docs/terraform/resources/lockbox_secret)
+- [yandex_lockbox_secret_iam_binding](https://yandex.cloud/ru/docs/terraform/resources/lockbox_secret_iam_binding)
+- [Role reference Yandex Cloud](https://yandex.cloud/ru/docs/iam/roles-reference)
 - [random](https://registry.terraform.io/providers/hashicorp/random/latest/docs)
 
 ---

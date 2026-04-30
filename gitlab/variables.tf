@@ -72,3 +72,22 @@ variable "gitlab" {
   })
   description = "Настройки Gitlab"
 }
+
+variable "registry" {
+  type = object({
+    name = string
+  })
+  description = "Настройки сервиса для хранения и распространения Docker-образов"
+}
+
+variable "kms_key_name" {
+  type        = string
+  description = "Наименование ключа шифрования"
+}
+
+variable "lockbox" {
+  type = object({
+    name = string
+  })
+  description = "Настройки сервиса для хранения секретов"
+}
