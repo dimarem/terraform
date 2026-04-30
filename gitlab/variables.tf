@@ -85,9 +85,9 @@ variable "kms_key_name" {
   description = "Наименование ключа шифрования"
 }
 
-variable "lockbox" {
+variable "lockbox_secret" {
   type = object({
     name = string
   })
-  description = "Настройки сервиса для хранения секретов"
+  description = "Настройки секрета в Lockbox"
 }

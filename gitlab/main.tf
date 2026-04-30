@@ -136,12 +136,14 @@ resource "yandex_kms_symmetric_key" "gitlab" {
   rotation_period   = "8760h" # 1 год.
 }
 
-# Создание сервиса для хранения секретов
+# Создание секрета в Lockbox
+# Значение секрета вносится вручную в интерфейсе управления
 resource "yandex_lockbox_secret" "gitlab" {
-  folder_id = var.folder_id
-  name = var.lockbox["name"]
+  folder_id           = var.folder_id
+  name                = var.lockbox_secret["name"]
+  description         = "Пример секрета"
   deletion_protection = true
-  kms_key_id = yandex_kms_symmetric_key.gitlab.id
+  kms_key_id          = yandex_kms_symmetric_key.gitlab.id
 }
 
 # Даем сервисному аккаунту право на просмотр секретов

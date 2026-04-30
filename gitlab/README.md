@@ -48,7 +48,7 @@ gitlab = {
 registry = {
   name = "demo-registry"
 }
-lockbox = {
+lockbox_secret = {
   name = "demo-lockbox"
 }
 ```
