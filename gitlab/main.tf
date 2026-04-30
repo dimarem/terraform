@@ -102,3 +102,54 @@ resource "yandex_gitlab_instance" "demo" {
   backup_retain_period_days = var.gitlab["backup_retain_period_days"]
   subnet_id                 = yandex_vpc_subnet.gitlab.id
 }
+
+# Создание сервиса для хранения и распространения Docker-образов 
+resource "yandex_container_registry" "gitlab" {
+  name      = var.registry["name"]
+  folder_id = var.folder_id
+}
+
+# Даем сервисному аккаунту право "пуллить" образы
+resource "yandex_container_registry_iam_binding" "puller" {
+  registry_id = yandex_container_registry.gitlab.id
+  role        = "container-registry.images.puller"
+
+  members = [
+    "serviceAccount:${yandex_iam_service_account.gitlab.id}"
+  ]
+}
+
+# Даем сервисному аккаунту право "пушить" образы
+resource "yandex_container_registry_iam_binding" "pusher" {
+  registry_id = yandex_container_registry.gitlab.id
+  role        = "container-registry.images.pusher"
+
+  members = [
+    "serviceAccount:${yandex_iam_service_account.gitlab.id}"
+  ]
+}
+
+# Ключ Yandex Key Management Service для шифрования секретов в Lockbox
+resource "yandex_kms_symmetric_key" "gitlab" {
+  name              = var.kms_key_name
+  default_algorithm = "AES_256"
+  rotation_period   = "8760h" # 1 год.
+}
+
+# Создание сервиса для хранения секретов
+resource "yandex_lockbox_secret" "gitlab" {
+  folder_id = var.folder_id
+  name = var.lockbox["name"]
+  deletion_protection = true
+  kms_key_id = yandex_kms_symmetric_key.gitlab.id
+}
+
+# Даем сервисному аккаунту право на просмотр секретов
+resource "yandex_lockbox_secret_iam_binding" "payloadViewer" {
+  secret_id = yandex_lockbox_secret.gitlab.id
+  role      = "lockbox.payloadViewer"
+
+  members = [
+    "serviceAccount:${yandex_iam_service_account.gitlab.id}"
+  ]
+}
