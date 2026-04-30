@@ -1,6 +1,6 @@
 # Gitlab
 
-Пример создания и использования Gitlab в Yandex Cloud.
+Пример создания Gitlab в Yandex Cloud.
 
 ## Создать ресурсы
 
@@ -87,38 +87,14 @@ terraform apply .tfplan
 terraform destroy
 ```
 
-## Документация
+## Регистрация Gitlab Runner
 
-- [yandex_gitlab_instance](https://yandex.cloud/ru/docs/terraform/resources/gitlab_instance)
-- [yandex_compute_disk](https://yandex.cloud/ru/docs/terraform/resources/compute_disk)
-- [yandex_vpc_network](https://yandex.cloud/ru/docs/terraform/resources/vpc_network)
-- [yandex_vpc_subnet](https://yandex.cloud/ru/docs/terraform/resources/vpc_subnet)
-- [yandex_container_registry](https://yandex.cloud/ru/docs/terraform/resources/container_registry)
-- [yandex_container_registry_iam_binding](https://yandex.cloud/ru/docs/terraform/resources/container_registry_iam_binding)
-- [yandex_lockbox_secret](https://yandex.cloud/ru/docs/terraform/resources/lockbox_secret)
-- [yandex_lockbox_secret_iam_binding](https://yandex.cloud/ru/docs/terraform/resources/lockbox_secret_iam_binding)
-- [Role reference Yandex Cloud](https://yandex.cloud/ru/docs/iam/roles-reference)
-- [random](https://registry.terraform.io/providers/hashicorp/random/latest/docs)
-
----
-
-## Пример проекта
-
-Это простой пример управления инфраструктурой с помощью terraform и CI/CD Gitlab.
-
-В данном примере будет выводиться домен, на котором запущен созданный экземпляр Gitlab.
-
-#### Требуемые действия:
-
-1. Создать проект `tf-project`.
-
-2. Зарегистрировать Gitlab Runner:
-2.1 Внутри проекта перейти: `Settings → CI/CD → Runners`
-2.2 Нажать **New Project Runner**
-2.3 Выбрать **Run untagged jobs** (чтобы не привязывать пайплайн к определённому тегу)
-2.4 Нажать **Create runner**
-2.5 Скопировать полученную строку для регистрации GitLab Runner
-2.6 Зарегистрировать GitLab Runner на созданной выше ВМ (yandex_compute_instance.gitlab)
+1. Внутри проекта перейти: `CI/CD → Runners` на панели администратора
+2. Нажать **New Project Runner**
+3. Выбрать **Run untagged jobs** (чтобы не привязывать пайплайн к определённому тегу)
+4. Нажать **Create runner**
+5. Скопировать полученную строку для регистрации GitLab Runner
+6. Зарегистрировать GitLab Runner на созданной выше ВМ (yandex_compute_instance.gitlab)
 
 ```bash
 # подключаемся к ВМ
@@ -157,211 +133,17 @@ EOF
 systemctl reload docker
 ```
 
-- проверим, что GitLab Runner доступен: `Settings → CI/CD → Runners`, раннер должен быть активен
-
-3. Создать переменные окружения:
-3.1 Внутри проекта перейти: `Settings → CI/CD → Variables`
-3.2 `TF_VAR_cloud_id`: указать id облака
-3.3 `TF_VAR_folder_id`: указать id директории в облаке
-3.4 `TF_VAR_zone`: зона доступности (например, "ru-central1-a")
-3.5 `TF_VAR_gitlab_id`: id экземпляра Gitlab
-3.6 `YC_KEY`: содержимое созданного файла `.key.json` (см. local_file.key) с флагом **MASKED**. Для этого:
-
-- убедиться, что `.key.json` заканчивается на `}`, не на пустую строку
-- выполнить команду: `cat .key.json | base64 -w 0`
-- полученный хеш указать как значение создаваемой переменной
-
-4. Создать в проекте следующие файлы:
-
-**.gitignore:**
-
-```
-.terraform.tfstate
-.terraform.tfstate.backup
-.terraform.tfstate.lock.info
-.terraform.lock.hcl
-.terraform/
-*.tfplan
-*.tfvars
-*.out
-*.log
-terraform.tfvars
-```
-
-**main.tf:**
-
-```hcl
-data "yandex_gitlab_instance" "demo" {
-  id = var.gitlab_id
-}
-```
-
-**outputs.tf:**
-
-```hcl
-output "gitlab_domain" {
-  value       = data.yandex_gitlab_instance.demo.domain
-  description = "Домен, на котором запущен Gitlab"
-}
-```
-
-**provider.tf:**
-
-```hcl
-provider "yandex" {
-  cloud_id  = var.cloud_id
-  folder_id = var.folder_id
-  zone      = var.zone
-}
-```
-
-**variables.tf:**
-
-```hcl
-variable "cloud_id" {
-  type        = string
-  description = "ID облака"
-}
-
-variable "folder_id" {
-  type        = string
-  description = "ID директории в облаке"
-}
-
-variable "zone" {
-  type        = string
-  default     = "ru-central1-a"
-  description = "Зона доступности"
-
-  validation {
-    condition     = contains(["ru-central1-a", "ru-central1-b", "ru-central1-d"], var.zone)
-    error_message = "Недопустимое значение зоны"
-  }
-}
-
-variable "gitlab_id" {
-  type        = string
-  description = "ID Gitlab"
-}
-```
-
-**versions.tf:**
-
-```hcl
-terraform {
-  required_version = "~> 1.5"
-
-  required_providers {
-    yandex = {
-      source  = "yandex-cloud/yandex"
-      version = ">= 0.87.0"
-    }
-  }
-}
-```
-
-**.gitlab-ci.yml:**
-
-```yml
-stages:
-  - lint
-  - init
-  - validate
-  - plan
-  - apply
-
-image:
-  name: hashicorp/terraform:1.8
-  entrypoint: [""]
-
-variables:
-  # провайдер Яндекса автоматически прочитает файл по этому пути
-  # и предоставит клиенту terraform права на выполнение действий
-  # от имени созданного сервисного аккаунта
-  YC_SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
-
-cache:
-  key: terraform-cache-${CI_COMMIT_REF_SLUG}
-  paths:
-    - .terraform/
-    - .terraform.lock.hcl
-
-before_script:
-  - echo ${YC_KEY} | base64 -d > /tmp/sa-key.json
-  - |
-    cat <<EOF >> ~/.terraformrc
-    provider_installation {
-      network_mirror {
-        url = "https://terraform-mirror.yandexcloud.net/"
-        include = ["registry.terraform.io/*/*"]
-      }
-      direct {
-        exclude = ["registry.terraform.io/*/*"]
-      }
-    }
-    EOF
-
-lint:checkov:
-  stage: lint
-  image:
-    name: bridgecrew/checkov
-    entrypoint: [""]
-  before_script: []
-  script:
-    - checkov -d .
-
-lint:tflint:
-  stage: lint
-  image:
-    name: ghcr.io/terraform-linters/tflint
-    entrypoint: [""]
-  before_script: []
-  script:
-    - tflint 
-
-init:
-  stage: init
-  script:
-    - terraform init
-
-validate:
-  stage: validate
-  script:
-    - terraform validate
-
-plan:
-  stage: plan
-  script:
-    - terraform plan -out=tfplan
-  artifacts:
-    paths:
-      - tfplan
-
-apply:
-  stage: apply
-  script:
-    - terraform apply -auto-approve tfplan
-  when: manual
-  only:
-    - main
-```
-
-Итоговая структура проекта должна иметь следующий вид:
-
-```
-.
-├── .gitignore
-├── .gitlab-ci.yml
-├── main.tf
-├── outputs.tf
-├── provider.tf
-├── variables.tf
-└── versions.tf
-```
-
-5. Перейти в `Build -> Pipelines` и запустить пайплайн в Gitlab.
+- проверим, что GitLab Runner доступен: `CI/CD → Runners`, раннер должен быть активен
 
 ## Документация
 
-- [tflint](https://github.com/terraform-linters/tflint)
-- [checkov](https://www.checkov.io/)
+- [yandex_gitlab_instance](https://yandex.cloud/ru/docs/terraform/resources/gitlab_instance)
+- [yandex_compute_disk](https://yandex.cloud/ru/docs/terraform/resources/compute_disk)
+- [yandex_vpc_network](https://yandex.cloud/ru/docs/terraform/resources/vpc_network)
+- [yandex_vpc_subnet](https://yandex.cloud/ru/docs/terraform/resources/vpc_subnet)
+- [yandex_container_registry](https://yandex.cloud/ru/docs/terraform/resources/container_registry)
+- [yandex_container_registry_iam_binding](https://yandex.cloud/ru/docs/terraform/resources/container_registry_iam_binding)
+- [yandex_lockbox_secret](https://yandex.cloud/ru/docs/terraform/resources/lockbox_secret)
+- [yandex_lockbox_secret_iam_binding](https://yandex.cloud/ru/docs/terraform/resources/lockbox_secret_iam_binding)
+- [Role reference Yandex Cloud](https://yandex.cloud/ru/docs/iam/roles-reference)
+- [random](https://registry.terraform.io/providers/hashicorp/random/latest/docs)
